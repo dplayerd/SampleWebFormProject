@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreProject.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,11 +32,21 @@ namespace CoreProject.Helpers
             if (LoginHelper.HasLogined())
                 return true;
 
+            // READ DB And check account / pwd
+            AccountManager manager = new AccountManager();
+            var model = manager.GetAccount(account);
+
+            if (model == null ||
+                string.Compare(pwd, model.PWD, false) != 0)
+                return false;
+
+
+            // Keep status
             HttpContext.Current.Session[_sessionKey] = new LoginInfo()
             {
-                ID = Guid.Empty,
-                Name = "Moudou",
-                Level = UserLevel.Admin
+                ID = model.ID,
+                Name = model.Name,
+                Level = (UserLevel)model.Level
             };
 
             return true;

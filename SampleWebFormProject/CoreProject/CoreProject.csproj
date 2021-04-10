@@ -45,6 +45,9 @@
     <Compile Include="Helpers\LoginHelper.cs" />
     <Compile Include="Helpers\LoginInfo.cs" />
     <Compile Include="Helpers\UserLevel.cs" />
+    <Compile Include="Managers\AccountManager.cs" />
+    <Compile Include="Models\AccountInfoModel.cs" />
+    <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
