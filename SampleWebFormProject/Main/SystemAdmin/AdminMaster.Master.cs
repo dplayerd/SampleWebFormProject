@@ -17,5 +17,11 @@ namespace Main.SystemAdmin
                 Response.Redirect("~/SystemAdmin/index.aspx");
             }
         }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            LoginHelper.Logout();
+            Response.Redirect("~/SystemAdmin/index.aspx");
+        }
     }
 }
