@@ -56,7 +56,11 @@
             </td>
         </tr>
     </table>
-    <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" /><br />
+    <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" />
+    &nbsp;
+    &nbsp;
+    &nbsp;
+    <a href="MamberList.aspx">回上頁</a><br />
     <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
 
     <asp:HiddenField runat="server" ID="hfMsg" Value="" />

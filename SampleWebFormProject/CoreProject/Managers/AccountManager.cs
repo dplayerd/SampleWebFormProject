@@ -63,6 +63,7 @@ namespace CoreProject.Managers
             }
         }
 
+
         public AccountModel GetAccount(string name)
         {
             string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
@@ -275,6 +276,31 @@ namespace CoreProject.Managers
                 command.Parameters.AddWithValue("@name", model.Name);
                 command.Parameters.AddWithValue("@PHONE", model.Phone);
                 command.Parameters.AddWithValue("@Title", model.Title);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
+
+        public void DeleteAccountViewModel(Guid id)
+        {
+            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+            string queryString =
+                $@" DELETE AccountInfos WHERE ID = @id;
+                    DELETE Accounts WHERE ID = @id;
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@id", id);
 
                 try
                 {

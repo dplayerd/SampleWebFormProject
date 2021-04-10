@@ -7,7 +7,7 @@
 
     <a href="MemberDetail.aspx">新增</a>
 
-    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False">
+    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" OnRowCommand="GridView1_RowCommand">
         <Columns>
             <asp:TemplateField HeaderText="Account">
                 <ItemTemplate>
@@ -23,6 +23,15 @@
                     <%# (UserLevel)Eval("UserLevel") %>
                 </ItemTemplate>
             </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Act">
+                <ItemTemplate>
+                <asp:Button runat="server" ID="btnDelete" Text="Del" CommandName="DeleteItem" 
+                CommandArgument='<%# Eval("ID") %>' OnClientClick="return confirm('Are you sure?');" />
+                </ItemTemplate>
+            </asp:TemplateField>
         </Columns>
     </asp:GridView>
+
+    <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
 </asp:Content>
