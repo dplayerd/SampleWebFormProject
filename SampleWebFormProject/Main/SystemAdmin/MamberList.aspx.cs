@@ -19,11 +19,25 @@ namespace Main.SystemAdmin
             if (!this.IsPostBack)
             {
                 this.LoadGridView();
+                this.RestoreParameters();
             }
         }
 
-        private void LoadGridView()
+        private void RestoreParameters()
         {
+            string name = Request.QueryString["name"];
+            string levelText = Request.QueryString["level"];
+
+            if (!string.IsNullOrEmpty(name))
+                this.txtName.Text = name;
+
+                if (!string.IsNullOrEmpty(levelText))
+                this.rdblLevel.SelectedValue = levelText;
+        }
+
+        private string GetQueryString(bool includePage)
+        {
+            //----- Get Query string parameters -----
             string page = Request.QueryString["Page"];
             int pIndex = 0;
             if (string.IsNullOrEmpty(page))
@@ -36,16 +50,77 @@ namespace Main.SystemAdmin
                     pIndex = 1;
             }
 
+            string name = Request.QueryString["name"];
+            string levelText = Request.QueryString["level"];
+
+            int? level = null;
+            if (!string.IsNullOrEmpty(levelText))
+            {
+                int temp;
+                if (int.TryParse(levelText, out temp))
+                    level = temp;
+            }
+            //----- Get Query string parameters -----
+
+
+            List<string> conditions = new List<string>();
+
+            if (!string.IsNullOrEmpty(page) && includePage)
+                conditions.Add("Page=" + page);
+
+            if(!string.IsNullOrEmpty(name))
+                conditions.Add("Name=" + name);
+
+            if (!string.IsNullOrEmpty(levelText))
+                conditions.Add("Level=" + levelText);
+
+            string retText =
+                (conditions.Count > 0)
+                    ? "?" + string.Join("&", conditions)
+                    : string.Empty;
+
+            return retText;
+        }
+
+
+        private void LoadGridView()
+        {
+            //----- Get Query string parameters -----
+            string page = Request.QueryString["Page"];
+            int pIndex = 0;
+            if (string.IsNullOrEmpty(page))
+                pIndex = 1;
+            else
+            {
+                int.TryParse(page, out pIndex);
+
+                if (pIndex <= 0)
+                    pIndex = 1;
+            }
+
+            string name = Request.QueryString["name"];
+            string levelText = Request.QueryString["level"];
+
+            int? level = null;
+            if (!string.IsNullOrEmpty(levelText))
+            {
+                int temp;
+                if (int.TryParse(levelText, out temp))
+                    level = temp;
+            }
+            //----- Get Query string parameters -----
+
+
             int totalSize = 0;
 
             var manager = new AccountManager();
-            var list = manager.GetAccountViewModels(out totalSize, pIndex, _pageSize);
+            var list = manager.GetAccountViewModels(name, level, out totalSize, pIndex, _pageSize);
             int pages = PagingHelper.CalculatePages(totalSize, _pageSize);
 
             this.ltPages.Text = string.Empty;
             for (var i = 1; i <= pages; i++)
             {
-                string template = $@"<a href=""MamberList.aspx?Page={i}"">Page {i}</a> &nbsp;&nbsp;";
+                string template = $@"<a href=""MamberList.aspx{this.GetQueryString(false)}&Page={i}"">Page {i}</a> &nbsp;&nbsp;";
                 this.ltPages.Text += template;
             }
 
@@ -70,6 +145,23 @@ namespace Main.SystemAdmin
                     this.lblMsg.Text = "已刪除。";
                 }
             }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            string name = this.txtName.Text;
+            string level = this.rdblLevel.Text;
+
+
+            string template = "?Page=1";
+
+            if (!string.IsNullOrEmpty(name))
+                template += "&name=" + name;
+
+            if (!string.IsNullOrEmpty(level))
+                template += "&level=" + level;
+
+            Response.Redirect("MamberList.aspx" + template);
         }
     }
 }

@@ -107,9 +107,29 @@ namespace CoreProject.Managers
 
 
         #region ViewModel
-        public List<AccountViewModel> GetAccountViewModels(out int totalSize, int currentPage = 1, int pageSize = 10)
+        public List<AccountViewModel> GetAccountViewModels(
+            string name, int? level,
+            out int totalSize, int currentPage = 1, int pageSize = 10)
         {
             string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+
+            //----- Process conditions -----
+            List<string> conditions = new List<string>();
+
+            if (!string.IsNullOrEmpty(name))
+                conditions.Add(" AccountInfos.Name LIKE '%' + @name + '%'");
+
+            if (level.HasValue)
+                conditions.Add(" UserLevel = @level");
+
+            string filterConditions =
+                (conditions.Count > 0) 
+                    ? (" WHERE " + string.Join(" AND ", conditions)) 
+                    : string.Empty ;
+            //----- Process conditions -----
+
+
+
             string queryString =
                 $@" 
                     SELECT TOP {10} * FROM
@@ -124,6 +144,7 @@ namespace CoreProject.Managers
                         FROM Accounts
                         JOIN AccountInfos
                         ON Accounts.ID = AccountInfos.ID
+                        {filterConditions}
                     ) AS TempT
                     WHERE RowNumber > {pageSize * (currentPage -1)}
                     ORDER BY ID
@@ -135,11 +156,18 @@ namespace CoreProject.Managers
                     FROM Accounts
                     JOIN AccountInfos
                     ON Accounts.ID = AccountInfos.ID
+                    {filterConditions}
                 ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
+
+                if (!string.IsNullOrEmpty(name))
+                    command.Parameters.AddWithValue("@name", name);
+
+                if (level.HasValue)
+                    command.Parameters.AddWithValue("@level", level.Value);
 
                 try
                 {

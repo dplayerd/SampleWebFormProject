@@ -7,6 +7,22 @@
 
     <a href="MemberDetail.aspx">新增</a>
 
+    <div>
+        進階搜尋：
+        <p> 
+            Name: <asp:TextBox runat="server" ID="txtName"></asp:TextBox> 
+            Level: 
+            <asp:RadioButtonList runat="server" ID="rdblLevel" RepeatDirection="Horizontal" RepeatLayout="Flow">
+                <asp:ListItem Text="All" Value=""></asp:ListItem>
+                <asp:ListItem Text="Normal" Value="0"></asp:ListItem>
+                <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
+                <asp:ListItem Text="Employee" Value="2"></asp:ListItem>
+                <asp:ListItem Text="Supervisor" Value="3"></asp:ListItem>
+            </asp:RadioButtonList>
+            <asp:Button runat="server" ID="btnSearch" Text="Search" OnClick="btnSearch_Click" />
+        </p>
+    </div>
+
     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" OnRowCommand="GridView1_RowCommand">
         <Columns>
             <asp:TemplateField HeaderText="Account">
