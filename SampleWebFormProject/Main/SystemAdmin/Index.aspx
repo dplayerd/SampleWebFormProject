@@ -9,8 +9,12 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-        </div>
+        <table border="1">
+            <tr><td>帳號</td><td><asp:TextBox runat="server" ID="txtAccount" ></asp:TextBox></td></tr>
+            <tr><td>密碼</td><td><asp:TextBox runat="server" ID="txtPWD" ></asp:TextBox></td></tr>
+        </table>
+
+        <asp:Button runat="server" ID="btn1" Text="Login" />
     </form>
 </body>
 </html>
