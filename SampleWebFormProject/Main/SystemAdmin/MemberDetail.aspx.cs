@@ -1,5 +1,6 @@
 ﻿using CoreProject.Helpers;
 using CoreProject.Managers;
+using CoreProject.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +12,45 @@ namespace Main.SystemAdmin
 {
     public partial class MemberDetail : System.Web.UI.Page
     {
+        bool isUpdateMode = false;
+
         protected void Page_Init(object sender, EventArgs e)
+        {
+            if (this.IsUpdateMode())
+            {
+                Guid temp;
+                Guid.TryParse(Request.QueryString["ID"], out temp);
+
+                this.txtAccount.Enabled = false;
+                this.txtAccount.BackColor = System.Drawing.Color.DarkGray;
+                this.LoadAccount(temp);
+            }
+            else
+            {
+
+                this.txtPWD.Enabled = false;
+                this.txtPWD.BackColor = System.Drawing.Color.DarkGray;
+            }
+        }
+
+        private bool IsUpdateMode()
         {
             string qsID = Request.QueryString["ID"];
 
-            if (string.IsNullOrEmpty(qsID))
-                Response.Redirect("~/SystemAdmin/MemberList.aspx");
-
             Guid temp;
-            if (!Guid.TryParse(qsID, out temp))
-                Response.Redirect("~/SystemAdmin/MemberList.aspx");
+            if (Guid.TryParse(qsID, out temp))
+                return true;
 
+            return false;
+        }
 
+        private void LoadAccount(Guid id)
+        {
             var manager = new AccountManager();
-            var model = manager.GetAccountViewModel(temp);
+            var model = manager.GetAccountViewModel(id);
 
             if (model == null)
                 Response.Redirect("~/SystemAdmin/MemberList.aspx");
-
 
             this.txtAccount.Text = model.Account;
             this.txtName.Text = model.Name;
@@ -38,29 +60,62 @@ namespace Main.SystemAdmin
             this.rdblUserLevel.SelectedValue = model.UserLevel.ToString();
         }
 
+
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            string qsID = Request.QueryString["ID"];
-
-            Guid temp;
-            if (!Guid.TryParse(qsID, out temp))
-                return;
-
             var manager = new AccountManager();
-            var model = manager.GetAccountViewModel(temp);
 
-            if (!string.IsNullOrEmpty(this.txtPWD.Text) &&
-                !string.IsNullOrEmpty(this.txtNewPWD.Text))
+
+            AccountViewModel model = null;
+
+            if (this.IsUpdateMode())
             {
-                if (model.PWD == this.txtPWD.Text)
+                string qsID = Request.QueryString["ID"];
+
+                Guid temp;
+                if (!Guid.TryParse(qsID, out temp))
+                    return;
+
+                manager.GetAccountViewModel(temp);
+            }
+            else
+            {
+                model = new AccountViewModel();
+            }
+
+
+            if (this.IsUpdateMode())
+            {
+                if (!string.IsNullOrEmpty(this.txtPWD.Text) &&
+                !string.IsNullOrEmpty(this.txtNewPWD.Text))
                 {
-                    model.PWD = this.txtNewPWD.Text.Trim();
+                    if (model.PWD == this.txtPWD.Text)
+                    {
+                        model.PWD = this.txtNewPWD.Text.Trim();
+                    }
+                    else
+                    {
+                        this.lblMsg.Text = "密碼和原密碼不一致";
+                        return;
+                    }
                 }
-                else
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(this.txtNewPWD.Text))
                 {
-                    this.lblMsg.Text = "密碼和原密碼不一致";
+                    this.lblMsg.Text = "密碼不可以為空";
                     return;
                 }
+
+                if (manager.GetAccount(this.txtAccount.Text.Trim()) != null)
+                {
+                    this.lblMsg.Text = "帳號已重覆，請選擇其它帳號";
+                    return;
+                }
+
+                model.Account = this.txtAccount.Text.Trim();
+                model.PWD = this.txtNewPWD.Text.Trim();
             }
 
             model.Title = this.txtTitle.Text.Trim();
@@ -84,7 +139,12 @@ namespace Main.SystemAdmin
                 model.UserLevel = userLever;
             }
 
-            manager.UpdateAccountViewModel(model);
+
+            if (this.IsUpdateMode())
+                manager.UpdateAccountViewModel(model);
+            else
+                manager.CreateAccountViewModel(model);
+
             this.lblMsg.Text = "存檔成功";
         }
     }

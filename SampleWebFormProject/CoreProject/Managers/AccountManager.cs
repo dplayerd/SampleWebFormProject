@@ -12,15 +12,15 @@ namespace CoreProject.Managers
     public class AccountManager
     {
         public void CreateAccount()
-        { 
+        {
         }
 
         public void UpdateAccount()
-        { 
+        {
         }
 
         public void DeleteAccount()
-        { 
+        {
         }
 
         public List<AccountModel> GetAccounts()
@@ -204,6 +204,39 @@ namespace CoreProject.Managers
                     reader.Close();
 
                     return model;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
+
+        public void CreateAccountViewModel(AccountViewModel model)
+        {
+            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+            string queryString =
+                $@" INSERT INTO Accounts ( ID, NAME, PWD,UserLevel,Email) VALUES ( @id, @account, @PWD, @UserLevel, @Email);
+                    INSERT INTO AccountInfos (ID, NAME, PHONE, TITLE) VALUES (@id, @name, @PHONE, @Title);
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@id", Guid.NewGuid());
+
+                command.Parameters.AddWithValue("@account", model.Account);
+                command.Parameters.AddWithValue("@PWD", model.PWD);
+                command.Parameters.AddWithValue("@UserLevel", model.UserLevel);
+                command.Parameters.AddWithValue("@Email", model.Email);
+                command.Parameters.AddWithValue("@name", model.Name);
+                command.Parameters.AddWithValue("@PHONE", model.Phone);
+                command.Parameters.AddWithValue("@Title", model.Title);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
