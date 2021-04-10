@@ -12,10 +12,7 @@ namespace Main.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!LoginHelper.HasLogined())
-            {
-                Response.Redirect("~/SystemAdmin/index.aspx");
-            }
+
         }
     }
 }
