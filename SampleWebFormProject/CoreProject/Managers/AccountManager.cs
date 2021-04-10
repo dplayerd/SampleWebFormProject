@@ -1,4 +1,5 @@
 ﻿using CoreProject.Models;
+using CoreProject.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -104,5 +105,60 @@ namespace CoreProject.Managers
                 }
             }
         }
+
+
+        #region ViewModel
+        public List<AccountViewModel> GetAccountViewModels()
+        {
+            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+            string queryString =
+                $@" 
+                    SELECT 
+                        Accounts.ID,
+                        Accounts.Name AS Account,
+                        Accounts.UserLevel,
+                        AccountInfos.Name,
+                        AccountInfos.Title
+                    FROM Accounts
+                    JOIN AccountInfos
+                    ON Accounts.ID = AccountInfos.ID
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    List<AccountViewModel> list = new List<AccountViewModel>();
+
+                    while (reader.Read())
+                    {
+                        AccountViewModel model = new AccountViewModel();
+                        model.ID = (Guid)reader["ID"];
+                        model.Name = (string)reader["Name"];
+                        model.Title = (string)reader["Title"];
+                        model.Account = (string)reader["Account"];
+                        model.UserLevel = (int)reader["UserLevel"];
+
+                        list.Add(model);
+                    }
+
+                    reader.Close();
+
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return null;
+                }
+            }
+        }
+
+        #endregion
     }
 }
