@@ -38,7 +38,6 @@ namespace CoreProject.Helpers
             }
         }
 
-
         public object GetScale(string dbCommand, List<SqlParameter> parameters)
         {
             string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
@@ -68,5 +67,34 @@ namespace CoreProject.Helpers
             }
         }
 
+        public int ExecuteNonQuery(string dbCommand, List<SqlParameter> parameters)
+        {
+            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(dbCommand, connection);
+
+                List<SqlParameter> parameters2 = new List<SqlParameter>();
+                foreach (var item in parameters)
+                {
+                    parameters2.Add(new SqlParameter(item.ParameterName, item.Value));
+                }
+
+                command.Parameters.AddRange(parameters2.ToArray());
+
+                try
+                {
+                    connection.Open();
+                    int totalChange = command.ExecuteNonQuery();
+                    return totalChange;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+        }
     }
 }
