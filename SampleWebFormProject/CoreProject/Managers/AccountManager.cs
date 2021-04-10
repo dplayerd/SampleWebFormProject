@@ -58,8 +58,7 @@ namespace CoreProject.Managers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    return null;
+                    throw;
                 }
             }
         }
@@ -100,8 +99,7 @@ namespace CoreProject.Managers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    return null;
+                    throw;
                 }
             }
         }
@@ -153,8 +151,7 @@ namespace CoreProject.Managers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    return null;
+                    throw;
                 }
             }
         }
@@ -171,7 +168,8 @@ namespace CoreProject.Managers
                         Accounts.PWD,
                         Accounts.Email,
                         AccountInfos.Name,
-                        AccountInfos.Title
+                        AccountInfos.Title,
+                        AccountInfos.Phone
                     FROM Accounts
                     JOIN AccountInfos
                         ON Accounts.ID = AccountInfos.ID
@@ -200,6 +198,7 @@ namespace CoreProject.Managers
                         model.UserLevel = (int)reader["UserLevel"];
                         model.PWD = (string)reader["PWD"];
                         model.Email = (string)reader["Email"];
+                        model.Phone = (string)reader["Phone"];
                     }
 
                     reader.Close();
@@ -208,8 +207,42 @@ namespace CoreProject.Managers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    return null;
+                    throw;
+                }
+            }
+        }
+
+
+        public void UpdateAccountViewModel(AccountViewModel model)
+        {
+            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+            string queryString =
+                $@" UPDATE Accounts SET PWD = @PWD, UserLevel = @UserLevel, Email = @Email  WHERE ID = @id;
+                    UPDATE AccountInfos SET NAME = @name, PHONE = @PHONE, TITLE = @Title WHERE ID = @id;
+                ";
+
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@id", model.ID);
+
+                command.Parameters.AddWithValue("@PWD", model.PWD);
+                command.Parameters.AddWithValue("@UserLevel", model.UserLevel);
+                command.Parameters.AddWithValue("@Email", model.Email);
+                command.Parameters.AddWithValue("@name", model.Name);
+                command.Parameters.AddWithValue("@PHONE", model.Phone);
+                command.Parameters.AddWithValue("@Title", model.Title);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw;
                 }
             }
         }

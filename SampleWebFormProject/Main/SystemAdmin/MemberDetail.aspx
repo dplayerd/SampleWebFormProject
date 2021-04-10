@@ -33,6 +33,12 @@
             </td>
         </tr>
         <tr>
+            <td>Phone</td>
+            <td>
+                <asp:TextBox runat="server" ID="txtPhone"></asp:TextBox>
+            </td>
+        </tr>
+        <tr>
             <td>Email</td>
             <td>
                 <asp:TextBox runat="server" ID="txtEmail"></asp:TextBox>
@@ -50,5 +56,8 @@
             </td>
         </tr>
     </table>
-    <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" />
+    <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" /><br />
+    <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
+
+    <asp:HiddenField runat="server" ID="hfMsg" Value="" />
 </asp:Content>
