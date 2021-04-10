@@ -73,6 +73,15 @@
     <Content Include="NewsList.aspx" />
     <Content Include="ProductDetail.aspx" />
     <Content Include="ProductList.aspx" />
+    <Content Include="SystemAdmin\Index.aspx" />
+    <Content Include="SystemAdmin\MamberList.aspx" />
+    <Content Include="SystemAdmin\MemberDetail.aspx" />
+    <Content Include="SystemAdmin\NewsDetail.aspx" />
+    <Content Include="SystemAdmin\NewsList.aspx" />
+    <Content Include="SystemAdmin\ProductDetail.aspx" />
+    <Content Include="SystemAdmin\ProductList.aspx" />
+    <Content Include="SystemAdmin\SaleNoteDetail.aspx" />
+    <Content Include="SystemAdmin\SaleNoteList.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -122,10 +131,81 @@
       <DependentUpon>ProductList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemAdmin\AdminMaster.Master.cs">
+      <DependentUpon>AdminMaster.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\AdminMaster.Master.designer.cs">
+      <DependentUpon>AdminMaster.Master</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\MamberList.aspx.cs">
+      <DependentUpon>MamberList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\MamberList.aspx.designer.cs">
+      <DependentUpon>MamberList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\MemberDetail.aspx.cs">
+      <DependentUpon>MemberDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\MemberDetail.aspx.designer.cs">
+      <DependentUpon>MemberDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\NewsDetail.aspx.cs">
+      <DependentUpon>NewsDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\NewsDetail.aspx.designer.cs">
+      <DependentUpon>NewsDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\NewsList.aspx.cs">
+      <DependentUpon>NewsList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\NewsList.aspx.designer.cs">
+      <DependentUpon>NewsList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\ProductDetail.aspx.cs">
+      <DependentUpon>ProductDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\ProductDetail.aspx.designer.cs">
+      <DependentUpon>ProductDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\ProductList.aspx.cs">
+      <DependentUpon>ProductList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\ProductList.aspx.designer.cs">
+      <DependentUpon>ProductList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\SaleNoteDetail.aspx.cs">
+      <DependentUpon>SaleNoteDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\SaleNoteDetail.aspx.designer.cs">
+      <DependentUpon>SaleNoteDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\SaleNoteList.aspx.cs">
+      <DependentUpon>SaleNoteList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\SaleNoteList.aspx.designer.cs">
+      <DependentUpon>SaleNoteList.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="MainMaster.Master" />
     <None Include="packages.config" />
+    <Content Include="SystemAdmin\AdminMaster.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
