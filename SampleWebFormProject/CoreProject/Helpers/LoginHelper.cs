@@ -10,15 +10,14 @@ namespace CoreProject.Helpers
     public class LoginHelper
     {
         private const string _sessionKey = "IsLogined";
-        private const string _sessionKey_Account = "Account";
 
         /// <summary> 檢查是否有登入 </summary>
         /// <returns></returns>
         public static bool HasLogined()
         {
-            bool? val = HttpContext.Current.Session[_sessionKey] as bool?;
+            var val = HttpContext.Current.Session[_sessionKey] as LoginInfo;
 
-            if (val.HasValue && val.Value)
+            if (val != null)
                 return true;
             else
                 return false;
@@ -29,31 +28,17 @@ namespace CoreProject.Helpers
         /// <param name="pwd"></param>
         public static bool TryLogin(string account, string pwd)
         {
+            if (LoginHelper.HasLogined())
+                return true;
+
+            HttpContext.Current.Session[_sessionKey] = new LoginInfo()
+            {
+                ID = Guid.Empty,
+                Name = "Moudou",
+                Level = UserLevel.Admin
+            };
+
             return true;
-            //if (LoginHelper.HasLogined())
-            //    return true;
-
-            //// Get user account from DB
-            //DataTable dt = DBAccountManager.GetUserAccount(account);
-
-            //if (dt == null || dt.Rows.Count == 0)
-            //    return false;
-
-            ////bool isAccountRight = string.Compare("admin", account, true) == 0;
-            //string dbPwd = dt.Rows[0].Field<string>("Pwd");
-            //string dbName = dt.Rows[0].Field<string>("Name");
-            //bool isPasswordRight = string.Compare(dbPwd, pwd) == 0;
-
-            ////if (isAccountRight && isPasswordRight)
-            //if (isPasswordRight)
-            //{
-            //    HttpContext.Current.Session[_sessionKey_Account] = dbName;
-            //    HttpContext.Current.Session[_sessionKey] = true;
-
-            //    return true;
-            //}
-            //else
-            //    return false;
         }
 
         /// <summary> 登出目前使用者，如果還沒登入就不執行 </summary>
@@ -63,17 +48,16 @@ namespace CoreProject.Helpers
                 return;
 
             HttpContext.Current.Session.Remove(_sessionKey);
-            HttpContext.Current.Session.Remove(_sessionKey_Account);
         }
 
-        /// <summary> 取得已登入者的資訊，如果還沒登入回傳空字串 </summary>
+        /// <summary> 取得已登入者的資訊，如果還沒登入回傳 NULL </summary>
         /// <returns></returns>
-        public static string GetCurrentUserInfo()
+        public static LoginInfo GetCurrentUserInfo()
         {
             if (!LoginHelper.HasLogined())
-                return string.Empty;
+                return null;
 
-            return HttpContext.Current.Session[_sessionKey_Account] as string;
+            return HttpContext.Current.Session[_sessionKey] as LoginInfo;
         }
     }
 }

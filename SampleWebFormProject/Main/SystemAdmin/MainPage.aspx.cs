@@ -8,18 +8,13 @@ using System.Web.UI.WebControls;
 
 namespace Main.SystemAdmin
 {
-    public partial class Index : System.Web.UI.Page
+    public partial class MainPage : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
-        }
-
-        protected void btn1_Click(object sender, EventArgs e)
-        {
-            if (LoginHelper.TryLogin(this.txtAccount.Text, this.txtPWD.Text))
+            if (!LoginHelper.HasLogined())
             {
-                Response.Redirect("~/SystemAdmin/MainPage.aspx");
+                Response.Redirect("~/SystemAdmin/index.aspx");
             }
         }
     }

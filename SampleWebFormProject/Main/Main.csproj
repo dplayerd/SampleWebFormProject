@@ -74,6 +74,7 @@
     <Content Include="ProductDetail.aspx" />
     <Content Include="ProductList.aspx" />
     <Content Include="SystemAdmin\Index.aspx" />
+    <Content Include="SystemAdmin\MainPage.aspx" />
     <Content Include="SystemAdmin\MamberList.aspx" />
     <Content Include="SystemAdmin\MemberDetail.aspx" />
     <Content Include="SystemAdmin\NewsDetail.aspx" />
@@ -144,6 +145,13 @@
     </Compile>
     <Compile Include="SystemAdmin\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\MainPage.aspx.cs">
+      <DependentUpon>MainPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\MainPage.aspx.designer.cs">
+      <DependentUpon>MainPage.aspx</DependentUpon>
     </Compile>
     <Compile Include="SystemAdmin\MamberList.aspx.cs">
       <DependentUpon>MamberList.aspx</DependentUpon>
