@@ -6,10 +6,16 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False">
         <Columns>
-            <asp:BoundField DataField="Account" HeaderText="Account" />
+            <asp:TemplateField HeaderText="Account">
+                <ItemTemplate>
+                    <a href="MemberDetail.aspx?ID=<%# Eval("ID") %>">
+                    <%# Eval("Account") %>
+                    </a>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:BoundField DataField="Name" HeaderText="Name" />
             <asp:BoundField DataField="Title" HeaderText="Title" />
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="Level">
                 <ItemTemplate>
                     <%# (UserLevel)Eval("UserLevel") %>
                 </ItemTemplate>

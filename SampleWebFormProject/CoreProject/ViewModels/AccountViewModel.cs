@@ -14,5 +14,9 @@ namespace CoreProject.ViewModels
         public string Title { get; set; }
         public int UserLevel { get; set; } = 0;
 
+        public string PWD { get; set; }
+
+        public string Email { get; set; }
+
     }
 }
