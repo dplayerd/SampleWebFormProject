@@ -33,5 +33,7 @@
         </Columns>
     </asp:GridView>
 
+    <asp:Literal runat="server" ID="ltPages"></asp:Literal>
+
     <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
 </asp:Content>

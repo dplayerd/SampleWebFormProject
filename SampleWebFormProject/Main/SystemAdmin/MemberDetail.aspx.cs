@@ -12,8 +12,6 @@ namespace Main.SystemAdmin
 {
     public partial class MemberDetail : System.Web.UI.Page
     {
-        bool isUpdateMode = false;
-
         protected void Page_Init(object sender, EventArgs e)
         {
             if (this.IsUpdateMode())

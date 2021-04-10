@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Helpers\LoginHelper.cs" />
     <Compile Include="Helpers\LoginInfo.cs" />
+    <Compile Include="Helpers\PagingHelper.cs" />
     <Compile Include="Helpers\UserLevel.cs" />
     <Compile Include="Managers\AccountManager.cs" />
     <Compile Include="Models\AccountInfoModel.cs" />

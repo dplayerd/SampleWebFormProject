@@ -107,17 +107,31 @@ namespace CoreProject.Managers
 
 
         #region ViewModel
-        public List<AccountViewModel> GetAccountViewModels()
+        public List<AccountViewModel> GetAccountViewModels(out int totalSize, int currentPage = 1, int pageSize = 10)
         {
             string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
             string queryString =
                 $@" 
-                    SELECT 
-                        Accounts.ID,
-                        Accounts.Name AS Account,
-                        Accounts.UserLevel,
-                        AccountInfos.Name,
-                        AccountInfos.Title
+                    SELECT TOP {10} * FROM
+                    (
+                        SELECT 
+                            ROW_NUMBER() OVER(ORDER BY Accounts.ID) AS RowNumber,
+                            Accounts.ID,
+                            Accounts.Name AS Account,
+                            Accounts.UserLevel,
+                            AccountInfos.Name,
+                            AccountInfos.Title
+                        FROM Accounts
+                        JOIN AccountInfos
+                        ON Accounts.ID = AccountInfos.ID
+                    ) AS TempT
+                    WHERE RowNumber > {pageSize * (currentPage -1)}
+                    ORDER BY ID
+                ";
+
+            string countQuery =
+                $@" SELECT 
+                        COUNT(Accounts.ID)
                     FROM Accounts
                     JOIN AccountInfos
                     ON Accounts.ID = AccountInfos.ID
@@ -147,6 +161,11 @@ namespace CoreProject.Managers
                     }
 
                     reader.Close();
+
+                    // 算總數並回傳
+                    command.CommandText = countQuery;
+                    int? totalSize2 = command.ExecuteScalar() as int?;
+                    totalSize = (totalSize2.HasValue) ? totalSize2.Value : 0;
 
                     return list;
                 }

@@ -1,4 +1,5 @@
-﻿using CoreProject.Managers;
+﻿using CoreProject.Helpers;
+using CoreProject.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,9 @@ namespace Main.SystemAdmin
 {
     public partial class MamberList : System.Web.UI.Page
     {
+        const int _pageSize = 10;
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!this.IsPostBack)
@@ -20,8 +24,31 @@ namespace Main.SystemAdmin
 
         private void LoadGridView()
         {
+            string page = Request.QueryString["Page"];
+            int pIndex = 0;
+            if (string.IsNullOrEmpty(page))
+                pIndex = 1;
+            else
+            {
+                int.TryParse(page, out pIndex);
+
+                if (pIndex <= 0)
+                    pIndex = 1;
+            }
+
+            int totalSize = 0;
+
             var manager = new AccountManager();
-            var list = manager.GetAccountViewModels();
+            var list = manager.GetAccountViewModels(out totalSize, pIndex, _pageSize);
+            int pages = PagingHelper.CalculatePages(totalSize, _pageSize);
+
+            this.ltPages.Text = string.Empty;
+            for (var i = 1; i <= pages; i++)
+            {
+                string template = $@"<a href=""MamberList.aspx?Page={i}"">Page {i}</a> &nbsp;&nbsp;";
+                this.ltPages.Text += template;
+            }
+
             this.GridView1.DataSource = list;
             this.GridView1.DataBind();
         }
