@@ -143,7 +143,17 @@ namespace Main.SystemAdmin
             if (this.IsUpdateMode())
                 manager.UpdateAccountViewModel(model);
             else
-                manager.CreateAccountViewModel(model);
+            {
+                try
+                {
+                    manager.CreateAccountViewModel(model);
+                }
+                catch (Exception ex)
+                {
+                    this.lblMsg.Text = ex.ToString();
+                    return;
+                }
+            }
 
             this.lblMsg.Text = "存檔成功";
         }

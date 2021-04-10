@@ -220,6 +220,14 @@ namespace CoreProject.Managers
                     INSERT INTO AccountInfos (ID, NAME, PHONE, TITLE) VALUES (@id, @name, @PHONE, @Title);
                 ";
 
+            // Check account is repeated.
+            if (this.GetAccount(model.Account) != null)
+            {
+                throw new Exception($"Account [{model.Account}] has been created.");
+            }
+
+
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
