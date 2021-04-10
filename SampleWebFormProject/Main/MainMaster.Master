@@ -1,0 +1,42 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MainMaster.master.cs" Inherits="Main.MainMaster" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <table  width="100%">
+            <tr>
+                <td style="background-color:gray">
+                    <div>
+                        <img src="/Images/Logo.png" height="100" width="100" />
+                    </div>
+                </td>
+                <td style="background-color:gray">
+                    <div></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div></div>
+                </td>
+                <td>
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="background-color:gray">
+                    <div></div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
