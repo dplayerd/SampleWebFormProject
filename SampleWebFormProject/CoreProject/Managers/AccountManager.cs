@@ -1,7 +1,9 @@
-﻿using CoreProject.Models;
+﻿using CoreProject.Helpers;
+using CoreProject.Models;
 using CoreProject.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CoreProject.Managers
 {
-    public class AccountManager
+    public class AccountManager : DBBase
     {
         public void CreateAccount()
         {
@@ -107,12 +109,108 @@ namespace CoreProject.Managers
 
 
         #region ViewModel
+        //public List<AccountViewModel> GetAccountViewModels(
+        //    string name, int? level,
+        //    out int totalSize, int currentPage = 1, int pageSize = 10)
+        //{
+        //    string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+
+        //    //----- Process conditions -----
+        //    List<string> conditions = new List<string>();
+
+        //    if (!string.IsNullOrEmpty(name))
+        //        conditions.Add(" AccountInfos.Name LIKE '%' + @name + '%'");
+
+        //    if (level.HasValue)
+        //        conditions.Add(" UserLevel = @level");
+
+        //    string filterConditions =
+        //        (conditions.Count > 0)
+        //            ? (" WHERE " + string.Join(" AND ", conditions))
+        //            : string.Empty;
+        //    //----- Process conditions -----
+
+
+
+        //    string queryString =
+        //        $@" 
+        //            SELECT TOP {10} * FROM
+        //            (
+        //                SELECT 
+        //                    ROW_NUMBER() OVER(ORDER BY Accounts.ID) AS RowNumber,
+        //                    Accounts.ID,
+        //                    Accounts.Name AS Account,
+        //                    Accounts.UserLevel,
+        //                    AccountInfos.Name,
+        //                    AccountInfos.Title
+        //                FROM Accounts
+        //                JOIN AccountInfos
+        //                ON Accounts.ID = AccountInfos.ID
+        //                {filterConditions}
+        //            ) AS TempT
+        //            WHERE RowNumber > {pageSize * (currentPage - 1)}
+        //            ORDER BY ID
+        //        ";
+
+        //    string countQuery =
+        //        $@" SELECT 
+        //                COUNT(Accounts.ID)
+        //            FROM Accounts
+        //            JOIN AccountInfos
+        //            ON Accounts.ID = AccountInfos.ID
+        //            {filterConditions}
+        //        ";
+
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        SqlCommand command = new SqlCommand(queryString, connection);
+
+        //        if (!string.IsNullOrEmpty(name))
+        //            command.Parameters.AddWithValue("@name", name);
+
+        //        if (level.HasValue)
+        //            command.Parameters.AddWithValue("@level", level.Value);
+
+        //        try
+        //        {
+        //            connection.Open();
+        //            SqlDataReader reader = command.ExecuteReader();
+
+        //            List<AccountViewModel> list = new List<AccountViewModel>();
+
+        //            while (reader.Read())
+        //            {
+        //                AccountViewModel model = new AccountViewModel();
+        //                model.ID = (Guid)reader["ID"];
+        //                model.Name = (string)reader["Name"];
+        //                model.Title = (string)reader["Title"];
+        //                model.Account = (string)reader["Account"];
+        //                model.UserLevel = (int)reader["UserLevel"];
+
+        //                list.Add(model);
+        //            }
+
+        //            reader.Close();
+
+        //            // 算總數並回傳
+        //            command.CommandText = countQuery;
+        //            int? totalSize2 = command.ExecuteScalar() as int?;
+        //            totalSize = (totalSize2.HasValue) ? totalSize2.Value : 0;
+
+        //            return list;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            throw;
+        //        }
+        //    }
+        //}
+
+
         public List<AccountViewModel> GetAccountViewModels(
             string name, int? level,
             out int totalSize, int currentPage = 1, int pageSize = 10)
         {
-            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
-
             //----- Process conditions -----
             List<string> conditions = new List<string>();
 
@@ -123,11 +221,10 @@ namespace CoreProject.Managers
                 conditions.Add(" UserLevel = @level");
 
             string filterConditions =
-                (conditions.Count > 0) 
-                    ? (" WHERE " + string.Join(" AND ", conditions)) 
-                    : string.Empty ;
+                (conditions.Count > 0)
+                    ? (" WHERE " + string.Join(" AND ", conditions))
+                    : string.Empty;
             //----- Process conditions -----
-
 
 
             string queryString =
@@ -146,7 +243,7 @@ namespace CoreProject.Managers
                         ON Accounts.ID = AccountInfos.ID
                         {filterConditions}
                     ) AS TempT
-                    WHERE RowNumber > {pageSize * (currentPage -1)}
+                    WHERE RowNumber > {pageSize * (currentPage - 1)}
                     ORDER BY ID
                 ";
 
@@ -159,50 +256,40 @@ namespace CoreProject.Managers
                     {filterConditions}
                 ";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            List<SqlParameter> dbParameters = new List<SqlParameter>();
+
+            if (!string.IsNullOrEmpty(name))
+                dbParameters.Add(new SqlParameter("@name", name));
+
+            if (level.HasValue)
+                dbParameters.Add(new SqlParameter("@level", level.Value));
+
+
+            var dt = this.GetDataTable(queryString, dbParameters);
+
+            List<AccountViewModel> list = new List<AccountViewModel>();
+
+            foreach (DataRow dr in dt.Rows)
             {
-                SqlCommand command = new SqlCommand(queryString, connection);
+                AccountViewModel model = new AccountViewModel();
+                model.ID = (Guid)dr["ID"];
+                model.Name = (string)dr["Name"];
+                model.Title = (string)dr["Title"];
+                model.Account = (string)dr["Account"];
+                model.UserLevel = (int)dr["UserLevel"];
 
-                if (!string.IsNullOrEmpty(name))
-                    command.Parameters.AddWithValue("@name", name);
-
-                if (level.HasValue)
-                    command.Parameters.AddWithValue("@level", level.Value);
-
-                try
-                {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    List<AccountViewModel> list = new List<AccountViewModel>();
-
-                    while (reader.Read())
-                    {
-                        AccountViewModel model = new AccountViewModel();
-                        model.ID = (Guid)reader["ID"];
-                        model.Name = (string)reader["Name"];
-                        model.Title = (string)reader["Title"];
-                        model.Account = (string)reader["Account"];
-                        model.UserLevel = (int)reader["UserLevel"];
-
-                        list.Add(model);
-                    }
-
-                    reader.Close();
-
-                    // 算總數並回傳
-                    command.CommandText = countQuery;
-                    int? totalSize2 = command.ExecuteScalar() as int?;
-                    totalSize = (totalSize2.HasValue) ? totalSize2.Value : 0;
-
-                    return list;
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                list.Add(model);
             }
+
+
+            // 算總數並回傳
+            int? totalSize2 = this.GetScale(countQuery, dbParameters) as int?;
+            totalSize = (totalSize2.HasValue) ? totalSize2.Value : 0;
+
+            return list;
         }
+
+
 
 
         public AccountViewModel GetAccountViewModel(Guid id)
