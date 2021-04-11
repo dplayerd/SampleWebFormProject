@@ -14,6 +14,15 @@ namespace Main.SystemAdmin
         const int _pageSize = 10;
 
 
+        internal class PagingLink
+        {
+            public string Name { get; set; }
+            public string Link { get; set; }
+            public string Title { get; set; }
+        }
+
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!this.IsPostBack)
@@ -101,12 +110,19 @@ namespace Main.SystemAdmin
             var list = manager.GetAccountViewModels(name, level, out totalSize, pIndex, _pageSize);
             int pages = PagingHelper.CalculatePages(totalSize, _pageSize);
 
-            this.ltPages.Text = string.Empty;
+            List<PagingLink> pagingList = new List<PagingLink>();
             for (var i = 1; i <= pages; i++)
             {
-                string template = $@"<a href=""MamberList.aspx{this.GetQueryString(false, i)}"">Page {i}</a> &nbsp;&nbsp;";
-                this.ltPages.Text += template;
+                pagingList.Add(new PagingLink()
+                {
+                    Link = $"MamberList.aspx{this.GetQueryString(false, i)}",
+                    Name = $"{i}",
+                    Title = $"前往第 {i} 頁"
+                }); 
             }
+
+            this.repPaging.DataSource = pagingList;
+            this.repPaging.DataBind();
 
             this.GridView1.DataSource = list;
             this.GridView1.DataBind();

@@ -49,7 +49,10 @@
         </Columns>
     </asp:GridView>
 
-    <asp:Literal runat="server" ID="ltPages"></asp:Literal>
-
+    <asp:Repeater runat="server" ID="repPaging">
+        <ItemTemplate>
+            <a href="<%# Eval("Link") %>" title="<%# Eval("Title") %>">Page-<%# Eval("Name") %></a>
+        </ItemTemplate>
+    </asp:Repeater>
     <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
 </asp:Content>
