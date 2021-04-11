@@ -35,31 +35,12 @@ namespace Main.SystemAdmin
                 this.rdblLevel.SelectedValue = levelText;
         }
 
-        private string GetQueryString(bool includePage)
+        private string GetQueryString(bool includePage, int? pageIndex)
         {
             //----- Get Query string parameters -----
             string page = Request.QueryString["Page"];
-            int pIndex = 0;
-            if (string.IsNullOrEmpty(page))
-                pIndex = 1;
-            else
-            {
-                int.TryParse(page, out pIndex);
-
-                if (pIndex <= 0)
-                    pIndex = 1;
-            }
-
             string name = Request.QueryString["name"];
             string levelText = Request.QueryString["level"];
-
-            int? level = null;
-            if (!string.IsNullOrEmpty(levelText))
-            {
-                int temp;
-                if (int.TryParse(levelText, out temp))
-                    level = temp;
-            }
             //----- Get Query string parameters -----
 
 
@@ -73,6 +54,9 @@ namespace Main.SystemAdmin
 
             if (!string.IsNullOrEmpty(levelText))
                 conditions.Add("Level=" + levelText);
+
+            if(pageIndex.HasValue)
+                conditions.Add("Page=" + pageIndex.Value);
 
             string retText =
                 (conditions.Count > 0)
@@ -120,7 +104,7 @@ namespace Main.SystemAdmin
             this.ltPages.Text = string.Empty;
             for (var i = 1; i <= pages; i++)
             {
-                string template = $@"<a href=""MamberList.aspx{this.GetQueryString(false)}&Page={i}"">Page {i}</a> &nbsp;&nbsp;";
+                string template = $@"<a href=""MamberList.aspx{this.GetQueryString(false, i)}"">Page {i}</a> &nbsp;&nbsp;";
                 this.ltPages.Text += template;
             }
 
