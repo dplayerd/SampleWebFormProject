@@ -53,6 +53,7 @@
                 <asp:Button runat="server" ID="btnDelete" Text="Del" CommandName="DeleteItem" 
                 CommandArgument='<%# Eval("ID") %>' OnClientClick="return confirm('Are you sure?');" />
 
+                <input type="hidden" value="<%# Eval("ID") %>" />
                 <button type="button" class="EditStock">Edit Stock</button>
                 </ItemTemplate>
             </asp:TemplateField>
@@ -75,7 +76,7 @@
             <tr><td>CurrentQty</td> <td><input type="number" name="CurrentQty" min="0" /></td></tr>
             <tr><td>LockedQty</td>  <td><input type="number" name="LockedQty" min="0" /></td></tr>
         </table>
-
+        <input type="hidden" id="StockID" />
         <button type="button" id="SaveStock">Save</button>
         <button type="button" id="CancelStockEdit">Cancel</button>
     </div>
@@ -86,15 +87,42 @@
             $("#divStockArea").hide(300);
 
             $(".EditStock").click(function () {
-                $("#divStockArea").show(300);
-
                 $(".EditStock").hide(300);
+
+                var id = $(this).closest("td").find(":hidden").val();
+                var url = "/SystemAdmin/Handlers/StockHandler.ashx?ID=" + id;
+
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    dataType: "JSON"
+                }).done(function (responseData) {
+                    $("input[name=CurrentQty]").val(responseData.CurrentQty);
+                    $("input[name=LockedQty]").val(responseData.LockedQty);
+                    $("#StockID").val(id);
+
+                    $("#divStockArea").show(300);
+                });
             });
 
             $("#SaveStock").click(function () {
-                alert("OK");
-                $("#divStockArea").hide(300);
-                $(".EditStock").show(300);
+                var id = $("#StockID").val();
+                var url = "/SystemAdmin/Handlers/StockHandler.ashx?ID=" + id;
+
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    dataType: "JSON", 
+                    data: {
+                        CurrentQty: $("input[name=CurrentQty]").val(),
+                        LockedQty: $("input[name=LockedQty]").val()
+                    }
+                }).done(function (responseData) {
+                    alert("更新成功");
+
+                    $("#divStockArea").hide(300);
+                    $(".EditStock").show(300);
+                });
             });
 
             $("#CancelStockEdit").click(function () {

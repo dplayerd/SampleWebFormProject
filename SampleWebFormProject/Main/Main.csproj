@@ -44,6 +44,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -141,6 +144,9 @@
     <Compile Include="SystemAdmin\AdminMaster.Master.designer.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
     </Compile>
+    <Compile Include="SystemAdmin\Handlers\StockHandler.ashx.cs">
+      <DependentUpon>StockHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="SystemAdmin\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -224,6 +230,7 @@
     <Content Include="MainMaster.Master" />
     <None Include="packages.config" />
     <Content Include="SystemAdmin\AdminMaster.Master" />
+    <Content Include="SystemAdmin\Handlers\StockHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

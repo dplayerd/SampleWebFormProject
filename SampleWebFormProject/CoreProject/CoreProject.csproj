@@ -50,9 +50,11 @@
     <Compile Include="Helpers\UserLevel.cs" />
     <Compile Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\ProductManager.cs" />
+    <Compile Include="Managers\StocksManager.cs" />
     <Compile Include="Models\AccountInfoModel.cs" />
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\StockModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
