@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CoreProject.Managers;
+using Main.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +13,33 @@ namespace Main
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            string idText = Request.QueryString["ID"];
 
+            if (string.IsNullOrEmpty(idText))
+                PageHelper.Goto404Page(this.Context);
+
+            Guid id;
+            if (!Guid.TryParse(idText, out id))
+                PageHelper.Goto404Page(this.Context);
+
+
+            if (!this.IsPostBack)
+                this.LoadProduct(id);
+        }
+
+        public void LoadProduct(Guid id)
+        {
+            var manager = new ProductManager();
+            var model = manager.GetProduct(id);
+
+            if(model == null)
+                PageHelper.Goto404Page(this.Context);
+
+
+            this.ltCaption.Text = model.Caption;
+            this.ltBody.Text = model.Body.Replace(Environment.NewLine, "<br/>");
+            this.ltType.Text = manager.GetProductName(model.ProductType);
+            this.ltPrice.Text = model.Price.ToString("0");
         }
     }
 }
