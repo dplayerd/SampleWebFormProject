@@ -1,5 +1,6 @@
 ﻿using CoreProject.Helpers;
 using CoreProject.Models;
+using CoreProject.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -101,7 +102,7 @@ namespace CoreProject.Managers
             this.ExecuteNonQuery(dbCommandText, parameters);
         }
 
-        public List<ProductModel> GetAdminProducts(
+        public List<ProductViewModel> GetAdminProducts(
             string caption, int? productType, decimal? minPrice, decimal? maxPrice,
             out int totalSize, int currentPage = 1, int pageSize = 10)
         {
@@ -113,13 +114,13 @@ namespace CoreProject.Managers
 
             if (!string.IsNullOrEmpty(caption))
             {
-                conditions.Add(" Caption LIKE '%' + @caption + '%'");
+                conditions.Add(" Products.Caption LIKE '%' + @caption + '%'");
                 dbParameters.Add(new SqlParameter("@caption", caption));
             }
 
             if (productType.HasValue)
             {
-                conditions.Add(" ProductType = @productType");
+                conditions.Add(" Products.ProductType = @productType");
                 dbParameters.Add(new SqlParameter("@productType", productType.Value));
             }
 
@@ -132,18 +133,18 @@ namespace CoreProject.Managers
                     maxPrice = temp;
                 }
 
-                conditions.Add(" Price BETWEEN @minPrice AND @maxPrice ");
+                conditions.Add(" Products.Price BETWEEN @minPrice AND @maxPrice ");
                 dbParameters.Add(new SqlParameter("@minPrice", minPrice.Value));
                 dbParameters.Add(new SqlParameter("@maxPrice", maxPrice.Value));
             }
             else if (minPrice.HasValue)
             {
-                conditions.Add(" Price >= @minPrice ");
+                conditions.Add(" Products.Price >= @minPrice ");
                 dbParameters.Add(new SqlParameter("@minPrice", minPrice.Value));
             }
             else if (maxPrice.HasValue)
             {
-                conditions.Add(" Price <= @maxPrice ");
+                conditions.Add(" Products.Price <= @maxPrice ");
                 dbParameters.Add(new SqlParameter("@maxPrice", maxPrice.Value));
             }
 
@@ -159,27 +160,38 @@ namespace CoreProject.Managers
                 SELECT TOP {10} * FROM
                 (
                     SELECT 
-                        ROW_NUMBER() OVER(ORDER BY ID) AS RowNumber,
-                        *
+	                    ROW_NUMBER() OVER(ORDER BY Products.CreateDate DESC) AS RowNumber,
+                        Products.*,
+	                    Stocks.CurrentQty,
+	                    Stocks.LockedQty,
+	                    Accounts.Name AS ModifierAccount
                     FROM Products
+                    JOIN Stocks
+	                    ON Products.ID = Stocks.ProductID
+                    LEFT JOIN Accounts
+	                    ON Products.Modifier = Accounts.ID
                     {filterConditions}
                 ) AS TempT
                 WHERE RowNumber > {pageSize * (currentPage - 1)}
-                ORDER BY ID
+                ORDER BY TempT.CreateDate DESC
             ";
 
             string countQuery =
-                $@" SELECT COUNT(ID)
+                $@" SELECT COUNT(Products.ID)
                     FROM Products
+                    JOIN Stocks
+	                    ON Products.ID = Stocks.ProductID
+                    LEFT JOIN Accounts
+	                    ON Products.Modifier = Accounts.ID
                     {filterConditions}
                 ";
 
             var dt = this.GetDataTable(query, dbParameters);
-            List<ProductModel> list = new List<ProductModel>();
+            List<ProductViewModel> list = new List<ProductViewModel>();
 
             foreach (DataRow dr in dt.Rows)
             {
-                ProductModel model = new ProductModel();
+                ProductViewModel model = new ProductViewModel();
 
                 model.ID = (Guid)dr["ID"];
                 model.ProductType = (int)dr["ProductType"];
@@ -191,6 +203,10 @@ namespace CoreProject.Managers
                 model.Creator = (Guid)dr["Creator"];
                 model.ModifyDate = dr["ModifyDate"] as DateTime?;
                 model.Modifier = dr["Modifier"] as Guid?;
+
+                model.CurrentQty = (int)dr["CurrentQty"];
+                model.LockedQty = (int)dr["LockedQty"];
+                model.ModifierAccount = dr["ModifierAccount"] as string;
 
                 list.Add(model);
             }

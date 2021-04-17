@@ -41,12 +41,18 @@
 
             <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0: #.00}" />
 
+            <asp:BoundField DataField="CurrentQty" HeaderText="CurrentQty" />
+            <asp:BoundField DataField="LockedQty" HeaderText="LockedQty" />
+            <asp:BoundField DataField="ModifyDate" HeaderText="ModifyDate" />
+            <asp:BoundField DataField="ModifierAccount" HeaderText="ModifierAccount" />
+
             <asp:TemplateField HeaderText="Act">
                 <ItemTemplate>
                 <asp:Button runat="server" ID="btnDelete" Text="Del" CommandName="DeleteItem" 
                 CommandArgument='<%# Eval("ID") %>' OnClientClick="return confirm('Are you sure?');" />
                 </ItemTemplate>
             </asp:TemplateField>
+
         </Columns>
     </asp:GridView>
 

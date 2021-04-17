@@ -1,6 +1,7 @@
 ﻿using CoreProject.Helpers;
 using CoreProject.Managers;
 using CoreProject.Models;
+using CoreProject.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -207,7 +208,7 @@ namespace Main.SystemAdmin
 
             if (e.Row.RowType == DataControlRowType.DataRow || e.Row.RowType == DataControlRowType.Separator)
             {
-                ProductModel mode = e.Row.DataItem as ProductModel;
+                ProductViewModel mode = e.Row.DataItem as ProductViewModel;
                 Literal ltProductType = e.Row.FindControl("ltProductType") as Literal;
 
                 string val = manager.GetProductName(mode.ProductType);
