@@ -19,16 +19,26 @@ namespace CoreProject.Managers
                 throw new Exception($"Product [{model.Caption}] has been created.");
             }
 
+            Guid productID = Guid.NewGuid();
+            Guid stockID = Guid.NewGuid();
+
             string dbCommandText =
                 $@" INSERT INTO Products 
                         (ID, ProductType, Caption, Price, Body, IsEnabled, CreateDate, Creator) 
                     VALUES 
                         (@ID, @ProductType, @Caption, @Price, @Body, @IsEnabled, @CreateDate, @Creator);
+
+                    INSERT INTO Stocks 
+                        (ID, ProductID, CurrentQty, LockedQty, CreateDate, Creator) 
+                    VALUES 
+                        (@SID, @ID, 0, 0, @CreateDate, @Creator);
                 ";
+
 
             List<SqlParameter> parameters = new List<SqlParameter>()
             {
-                new SqlParameter("@ID", Guid.NewGuid()),
+                new SqlParameter("@ID", productID),
+                new SqlParameter("@SID", stockID),
                 new SqlParameter("@ProductType", model.ProductType),
                 new SqlParameter("@Caption", model.Caption),
                 new SqlParameter("@Price", model.Price),
@@ -91,7 +101,7 @@ namespace CoreProject.Managers
             this.ExecuteNonQuery(dbCommandText, parameters);
         }
 
-        public List<ProductModel> GetProducts(
+        public List<ProductModel> GetAdminProducts(
             string caption, int? productType, decimal? minPrice, decimal? maxPrice,
             out int totalSize, int currentPage = 1, int pageSize = 10)
         {
@@ -191,6 +201,91 @@ namespace CoreProject.Managers
 
             return list;
         }
+
+
+        public List<ProductModel> GetProducts(string caption, int? productType, decimal? minPrice, decimal? maxPrice)
+        {
+            List<SqlParameter> dbParameters = new List<SqlParameter>();
+
+
+            //----- Process filter conditions -----
+            List<string> conditions = new List<string>();
+
+            if (!string.IsNullOrEmpty(caption))
+            {
+                conditions.Add(" Caption LIKE '%' + @caption + '%'");
+                dbParameters.Add(new SqlParameter("@caption", caption));
+            }
+
+            if (productType.HasValue)
+            {
+                conditions.Add(" ProductType = @productType");
+                dbParameters.Add(new SqlParameter("@productType", productType.Value));
+            }
+
+            if (minPrice.HasValue && maxPrice.HasValue)
+            {
+                if (minPrice.Value > maxPrice.Value)
+                {
+                    decimal temp = minPrice.Value;
+                    minPrice = maxPrice.Value;
+                    maxPrice = temp;
+                }
+
+                conditions.Add(" Price BETWEEN @minPrice AND @maxPrice ");
+                dbParameters.Add(new SqlParameter("@minPrice", minPrice.Value));
+                dbParameters.Add(new SqlParameter("@maxPrice", maxPrice.Value));
+            }
+            else if (minPrice.HasValue)
+            {
+                conditions.Add(" Price >= @minPrice ");
+                dbParameters.Add(new SqlParameter("@minPrice", minPrice.Value));
+            }
+            else if (maxPrice.HasValue)
+            {
+                conditions.Add(" Price <= @maxPrice ");
+                dbParameters.Add(new SqlParameter("@maxPrice", maxPrice.Value));
+            }
+
+            string filterConditions =
+                (conditions.Count > 0)
+                    ? (" AND " + string.Join(" AND ", conditions))
+                    : string.Empty;
+            //----- Process filter conditions -----
+
+
+            string query =
+                $@" SELECT  *
+                    FROM Products
+                    WHERE IsEnabled = 'TRUE'
+                        {filterConditions}
+                ";
+
+            var dt = this.GetDataTable(query, dbParameters);
+            List<ProductModel> list = new List<ProductModel>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                ProductModel model = new ProductModel();
+
+                model.ID = (Guid)dr["ID"];
+                model.ProductType = (int)dr["ProductType"];
+                model.Caption = (string)dr["Caption"];
+                model.Price = (decimal)dr["Price"];
+                model.Body = (string)dr["Body"];
+                model.IsEnabled = (bool)dr["IsEnabled"];
+                model.CreateDate = (DateTime)dr["CreateDate"];
+                model.Creator = (Guid)dr["Creator"];
+                model.ModifyDate = dr["ModifyDate"] as DateTime?;
+                model.Modifier = dr["Modifier"] as Guid?;
+
+                list.Add(model);
+            }
+
+
+            return list;
+        }
+
 
         private bool HasProductName(string name)
         {

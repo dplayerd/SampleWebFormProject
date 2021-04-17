@@ -83,14 +83,21 @@ namespace CoreProject.Helpers
 
                 command.Parameters.AddRange(parameters2.ToArray());
 
+                connection.Open();
+                SqlTransaction sqlTransaction = connection.BeginTransaction();
+                command.Transaction = sqlTransaction;
+
                 try
                 {
-                    connection.Open();
                     int totalChange = command.ExecuteNonQuery();
+                    sqlTransaction.Commit();
+
                     return totalChange;
                 }
                 catch (Exception ex)
                 {
+                    sqlTransaction.Rollback();
+
                     throw;
                 }
             }

@@ -137,7 +137,7 @@ namespace Main.SystemAdmin
             int totalSize = 0;
 
             var manager = new ProductManager();
-            var list = manager.GetProducts(caption, productType, minPrice, maxPrice, out totalSize, pIndex, _pageSize);
+            var list = manager.GetAdminProducts(caption, productType, minPrice, maxPrice, out totalSize, pIndex, _pageSize);
             int pages = PagingHelper.CalculatePages(totalSize, _pageSize);
 
             List<PagingLink> pagingList = new List<PagingLink>();
