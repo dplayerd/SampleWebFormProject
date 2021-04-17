@@ -25,7 +25,7 @@
         <Columns>
             <asp:TemplateField HeaderText="Caption">
                 <ItemTemplate>
-                    <a href="MemberDetail.aspx?ID=<%# Eval("ID") %>">
+                    <a href="ProductDetail.aspx?ID=<%# Eval("ID") %>">
                     <%# Eval("Caption") %>
                     </a>
                 </ItemTemplate>
@@ -35,7 +35,6 @@
                     <asp:Literal runat="server" ID="ltProductType" />
                 </ItemTemplate>
             </asp:TemplateField>
-
 
             <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0: #.00}" />
 

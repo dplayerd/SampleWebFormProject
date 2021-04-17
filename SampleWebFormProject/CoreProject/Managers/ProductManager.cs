@@ -150,7 +150,38 @@ namespace CoreProject.Managers
 
         public ProductModel GetProduct(Guid id)
         {
-            return null;
+            string queryString =
+                $@" SELECT *
+                    FROM Products
+                    WHERE ID = @id
+                ";
+
+            List<SqlParameter> dbParameters = new List<SqlParameter>();
+            dbParameters.Add(new SqlParameter("@id", id));
+
+            var dt = this.GetDataTable(queryString, dbParameters);
+
+            //----- 檢查值 -----
+            if (dt == null || dt.Rows.Count == 0)
+                return null;
+            //----- 檢查值 -----
+
+
+            ProductModel model = new ProductModel();
+            DataRow dr = dt.Rows[0];
+
+            model.ID = (Guid)dr["ID"];
+            model.ProductType = (int)dr["ProductType"];
+            model.Caption = (string)dr["Caption"];
+            model.Price = (decimal)dr["Price"];
+            model.Body = (string)dr["Body"];
+            model.IsEnabled = (bool)dr["IsEnabled"];
+            model.CreateDate = (DateTime)dr["CreateDate"];
+            model.Creator = (Guid)dr["Creator"];
+            model.ModifyDate = dr["ModifyDate"] as DateTime?;
+            model.Modifier = dr["Modifier"] as Guid?;
+
+            return model;
         }
 
 
@@ -162,7 +193,7 @@ namespace CoreProject.Managers
                     return "農機";
                 case 2:
                     return "門禁系統";
-                case 3: 
+                case 3:
                     return "電池";
                 default:
                     return "";
