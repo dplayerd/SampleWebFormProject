@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="ProductList.aspx.cs" Inherits="Main.SystemAdmin.ProductList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script src="/Scripts/jquery-3.6.0.min.js"></script>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     
     <a href="ProductDetail.aspx">新增</a>
@@ -50,6 +52,8 @@
                 <ItemTemplate>
                 <asp:Button runat="server" ID="btnDelete" Text="Del" CommandName="DeleteItem" 
                 CommandArgument='<%# Eval("ID") %>' OnClientClick="return confirm('Are you sure?');" />
+
+                <button type="button" class="EditStock">Edit Stock</button>
                 </ItemTemplate>
             </asp:TemplateField>
 
@@ -63,4 +67,43 @@
     </asp:Repeater>
     <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>--%>
 
+    <br />
+    <br />
+    <br />
+    <div id="divStockArea">
+        <table border="1">
+            <tr><td>CurrentQty</td> <td><input type="number" name="CurrentQty" min="0" /></td></tr>
+            <tr><td>LockedQty</td>  <td><input type="number" name="LockedQty" min="0" /></td></tr>
+        </table>
+
+        <button type="button" id="SaveStock">Save</button>
+        <button type="button" id="CancelStockEdit">Cancel</button>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $("#divStockArea").hide(300);
+
+            $(".EditStock").click(function () {
+                $("#divStockArea").show(300);
+
+                $(".EditStock").hide(300);
+            });
+
+            $("#SaveStock").click(function () {
+                alert("OK");
+                $("#divStockArea").hide(300);
+                $(".EditStock").show(300);
+            });
+
+            $("#CancelStockEdit").click(function () {
+                $("input[name=CurrentQty]").val("0");
+                $("input[name=LockedQty]").val("0");
+
+                $("#divStockArea").hide(300);
+                $(".EditStock").show(300);
+            });
+        });
+    </script>
 </asp:Content>
