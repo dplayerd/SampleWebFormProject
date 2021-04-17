@@ -92,8 +92,58 @@ namespace CoreProject.Managers
         }
 
         public List<ProductModel> GetProducts(
+            string caption, int? productType, decimal? minPrice, decimal? maxPrice,
             out int totalSize, int currentPage = 1, int pageSize = 10)
         {
+            List<SqlParameter> dbParameters = new List<SqlParameter>();
+
+
+            //----- Process filter conditions -----
+            List<string> conditions = new List<string>();
+
+            if (!string.IsNullOrEmpty(caption))
+            {
+                conditions.Add(" Caption LIKE '%' + @caption + '%'");
+                dbParameters.Add(new SqlParameter("@caption", caption));
+            }
+
+            if (productType.HasValue)
+            {
+                conditions.Add(" ProductType = @productType");
+                dbParameters.Add(new SqlParameter("@productType", productType.Value));
+            }
+
+            if (minPrice.HasValue && maxPrice.HasValue)
+            {
+                if (minPrice.Value > maxPrice.Value)
+                {
+                    decimal temp = minPrice.Value;
+                    minPrice = maxPrice.Value;
+                    maxPrice = temp;
+                }
+
+                conditions.Add(" Price BETWEEN @minPrice AND @maxPrice ");
+                dbParameters.Add(new SqlParameter("@minPrice", minPrice.Value));
+                dbParameters.Add(new SqlParameter("@maxPrice", maxPrice.Value));
+            }
+            else if (minPrice.HasValue)
+            {
+                conditions.Add(" Price >= @minPrice ");
+                dbParameters.Add(new SqlParameter("@minPrice", minPrice.Value));
+            }
+            else if (maxPrice.HasValue)
+            {
+                conditions.Add(" Price <= @maxPrice ");
+                dbParameters.Add(new SqlParameter("@maxPrice", maxPrice.Value));
+            }
+
+            string filterConditions =
+                (conditions.Count > 0)
+                    ? (" WHERE " + string.Join(" AND ", conditions))
+                    : string.Empty;
+            //----- Process filter conditions -----
+
+
             string query =
                 $@" 
                 SELECT TOP {10} * FROM
@@ -102,18 +152,18 @@ namespace CoreProject.Managers
                         ROW_NUMBER() OVER(ORDER BY ID) AS RowNumber,
                         *
                     FROM Products
+                    {filterConditions}
                 ) AS TempT
                 WHERE RowNumber > {pageSize * (currentPage - 1)}
                 ORDER BY ID
             ";
 
             string countQuery =
-                $@" SELECT 
-                    COUNT(ID)
-                FROM Products
-            ";
+                $@" SELECT COUNT(ID)
+                    FROM Products
+                    {filterConditions}
+                ";
 
-            List<SqlParameter> dbParameters = new List<SqlParameter>();
             var dt = this.GetDataTable(query, dbParameters);
             List<ProductModel> list = new List<ProductModel>();
 
@@ -134,7 +184,6 @@ namespace CoreProject.Managers
 
                 list.Add(model);
             }
-
 
             // 算總數並回傳
             int? totalSize2 = this.GetScale(countQuery, dbParameters) as int?;

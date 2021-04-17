@@ -21,7 +21,7 @@ namespace Main.SystemAdmin
 
                 //this.txtAccount.Enabled = false;
                 //this.txtAccount.BackColor = System.Drawing.Color.DarkGray;
-                //this.LoadAccount(temp);
+                this.LoadProduct(temp);
             }
             else
             {

@@ -35,45 +35,55 @@ namespace Main.SystemAdmin
 
         private void RestoreParameters()
         {
-            //string name = Request.QueryString["name"];
-            //string levelText = Request.QueryString["level"];
+            string caption = Request.QueryString["caption"];
+            string productTypeText = Request.QueryString["productType"];
+            string minPriceText = Request.QueryString["minPrice"];
+            string maxPriceText = Request.QueryString["maxPrice"];
 
-            //if (!string.IsNullOrEmpty(name))
-            //    this.txtName.Text = name;
+            if (!string.IsNullOrEmpty(caption))
+                this.txtCaption.Text = caption;
 
-            //if (!string.IsNullOrEmpty(levelText))
-            //    this.rdblLevel.SelectedValue = levelText;
+            if (!string.IsNullOrEmpty(productTypeText))
+                this.ddlProductType.SelectedValue = productTypeText;
+
+            if (!string.IsNullOrEmpty(minPriceText))
+                this.txtPrice1.Text = minPriceText;
+
+            if (!string.IsNullOrEmpty(maxPriceText))
+                this.txtPrice2.Text = maxPriceText;
+
         }
 
         private string GetQueryString(bool includePage, int? pageIndex)
         {
-            //----- Get Query string parameters -----
-            string page = Request.QueryString["Page"];
-            string name = Request.QueryString["name"];
-            string levelText = Request.QueryString["level"];
-            //----- Get Query string parameters -----
+            return string.Empty;
+            ////----- Get Query string parameters -----
+            //string page = Request.QueryString["Page"];
+            //string name = Request.QueryString["name"];
+            //string levelText = Request.QueryString["level"];
+            ////----- Get Query string parameters -----
 
 
-            List<string> conditions = new List<string>();
+            //List<string> conditions = new List<string>();
 
-            if (!string.IsNullOrEmpty(page) && includePage)
-                conditions.Add("Page=" + page);
+            //if (!string.IsNullOrEmpty(page) && includePage)
+            //    conditions.Add("Page=" + page);
 
-            if (!string.IsNullOrEmpty(name))
-                conditions.Add("Name=" + name);
+            //if (!string.IsNullOrEmpty(name))
+            //    conditions.Add("Name=" + name);
 
-            if (!string.IsNullOrEmpty(levelText))
-                conditions.Add("Level=" + levelText);
+            //if (!string.IsNullOrEmpty(levelText))
+            //    conditions.Add("Level=" + levelText);
 
-            if (pageIndex.HasValue)
-                conditions.Add("Page=" + pageIndex.Value);
+            //if (pageIndex.HasValue)
+            //    conditions.Add("Page=" + pageIndex.Value);
 
-            string retText =
-                (conditions.Count > 0)
-                    ? "?" + string.Join("&", conditions)
-                    : string.Empty;
+            //string retText =
+            //    (conditions.Count > 0)
+            //        ? "?" + string.Join("&", conditions)
+            //        : string.Empty;
 
-            return retText;
+            //return retText;
         }
 
 
@@ -92,23 +102,42 @@ namespace Main.SystemAdmin
                     pIndex = 1;
             }
 
-            //string name = Request.QueryString["name"];
-            //string levelText = Request.QueryString["level"];
+            string caption = Request.QueryString["caption"];
+            string productTypeText = Request.QueryString["productType"];
+            string minPriceText = Request.QueryString["minPrice"];
+            string maxPriceText = Request.QueryString["maxPrice"];
 
-            //int? level = null;
-            //if (!string.IsNullOrEmpty(levelText))
-            //{
-            //    int temp;
-            //    if (int.TryParse(levelText, out temp))
-            //        level = temp;
-            //}
-            ////----- Get Query string parameters -----
+
+            int? productType = null;
+            if (!string.IsNullOrEmpty(productTypeText))
+            {
+                int temp;
+                if (int.TryParse(productTypeText, out temp))
+                    productType = temp;
+            }
+
+            decimal? minPrice = null;
+            decimal? maxPrice = null;
+            if (!string.IsNullOrEmpty(minPriceText))
+            {
+                int temp;
+                if (int.TryParse(minPriceText, out temp))
+                    minPrice = temp;
+            }
+
+            if (!string.IsNullOrEmpty(maxPriceText))
+            {
+                int temp;
+                if (int.TryParse(maxPriceText, out temp))
+                    maxPrice = temp;
+            }
+            //----- Get Query string parameters -----
 
 
             int totalSize = 0;
 
             var manager = new ProductManager();
-            var list = manager.GetProducts(out totalSize, pIndex, _pageSize);
+            var list = manager.GetProducts(caption, productType, minPrice, maxPrice, out totalSize, pIndex, _pageSize);
             int pages = PagingHelper.CalculatePages(totalSize, _pageSize);
 
             List<PagingLink> pagingList = new List<PagingLink>();
@@ -150,19 +179,26 @@ namespace Main.SystemAdmin
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //string name = this.txtName.Text;
-            //string level = this.rdblLevel.Text;
+            string caption = this.txtCaption.Text;
+            string productType = this.ddlProductType.Text;
+            string minPrice = this.txtPrice1.Text;
+            string maxPrice = this.txtPrice2.Text;
 
+            string template = "?Page=1";
 
-            //string template = "?Page=1";
+            if (!string.IsNullOrEmpty(caption))
+                template += "&caption=" + caption;
 
-            //if (!string.IsNullOrEmpty(name))
-            //    template += "&name=" + name;
+            if (!string.IsNullOrEmpty(productType))
+                template += "&productType=" + productType;
 
-            //if (!string.IsNullOrEmpty(level))
-            //    template += "&level=" + level;
+            if (!string.IsNullOrEmpty(minPrice))
+                template += "&minPrice=" + minPrice;
 
-            //Response.Redirect("MamberList.aspx" + template);
+            if (!string.IsNullOrEmpty(maxPrice))
+                template += "&maxPrice=" + maxPrice;
+
+            Response.Redirect("ProductList.aspx" + template);
         }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)

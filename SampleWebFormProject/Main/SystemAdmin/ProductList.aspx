@@ -5,21 +5,24 @@
     
     <a href="ProductDetail.aspx">新增</a>
 
-   <%-- <div>
+    <div>
         進階搜尋：
         <p> 
-            Name: <asp:TextBox runat="server" ID="txtName"></asp:TextBox> 
-            Level: 
-            <asp:RadioButtonList runat="server" ID="rdblLevel" RepeatDirection="Horizontal" RepeatLayout="Flow">
+            Caption: <asp:TextBox runat="server" ID="txtCaption"></asp:TextBox> 
+            Type: 
+            <asp:DropDownList runat="server" ID="ddlProductType">
                 <asp:ListItem Text="All" Value=""></asp:ListItem>
-                <asp:ListItem Text="Normal" Value="0"></asp:ListItem>
-                <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
-                <asp:ListItem Text="Employee" Value="2"></asp:ListItem>
-                <asp:ListItem Text="Supervisor" Value="3"></asp:ListItem>
-            </asp:RadioButtonList>
+                <asp:ListItem Text="農機" Value="1"></asp:ListItem>
+                <asp:ListItem Text="門禁系統" Value="2"></asp:ListItem>
+                <asp:ListItem Text="電池" Value="3"></asp:ListItem>
+            </asp:DropDownList>
+            Price:
+            <asp:TextBox runat="server" ID="txtPrice1" placeholder="最小值"></asp:TextBox>~
+            <asp:TextBox runat="server" ID="txtPrice2" placeholder="最大值"></asp:TextBox>
+            
             <asp:Button runat="server" ID="btnSearch" Text="Search" OnClick="btnSearch_Click" />
         </p>
-    </div>--%>
+    </div>
 
     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound">
         <Columns>
@@ -30,7 +33,7 @@
                     </a>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Act">
+            <asp:TemplateField HeaderText="ProductType">
                 <ItemTemplate>
                     <asp:Literal runat="server" ID="ltProductType" />
                 </ItemTemplate>
