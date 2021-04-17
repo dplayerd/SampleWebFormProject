@@ -60,6 +60,42 @@ namespace Main.SystemAdmin
         protected global::System.Web.UI.WebControls.CheckBox ckbIsEnabled;
 
         /// <summary>
+        /// fuPic1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fuPic1;
+
+        /// <summary>
+        /// imgPic1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgPic1;
+
+        /// <summary>
+        /// fuPic2 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fuPic2;
+
+        /// <summary>
+        /// imgPic2 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgPic2;
+
+        /// <summary>
         /// btnSave 控制項。
         /// </summary>
         /// <remarks>

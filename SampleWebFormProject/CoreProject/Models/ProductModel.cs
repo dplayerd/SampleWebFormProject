@@ -18,5 +18,8 @@ namespace CoreProject.Models
         public Guid Creator { get; set; }
         public DateTime? ModifyDate { get; set; }
         public Guid? Modifier { get; set; }
+
+        public string Pic1 { get; set; }
+        public string Pic2 { get; set; }
     }
 }

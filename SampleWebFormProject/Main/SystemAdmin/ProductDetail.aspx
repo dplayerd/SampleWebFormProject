@@ -37,6 +37,22 @@
             </td>
         </tr>
         
+        <tr>
+            <td>Pic1</td>
+            <td>
+                <asp:FileUpload ID="fuPic1" runat="server" /><br />
+                <asp:Image ID="imgPic1" runat="server" Visible="false" Width="150" Height="150" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>Pic2</td>
+            <td>
+                <asp:FileUpload ID="fuPic2" runat="server" /><br />
+                <asp:Image ID="imgPic2" runat="server" Visible="false" Width="150" Height="150" />
+            </td>
+        </tr>
+
     </table>
     <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" />
     &nbsp;

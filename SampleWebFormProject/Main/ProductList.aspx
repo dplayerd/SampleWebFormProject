@@ -10,7 +10,7 @@
     <div class="container">
         <div class="pricing-table pricing-three-column row">
 
-            <asp:Repeater runat="server" ID="repList">
+            <asp:Repeater runat="server" ID="repList" OnItemDataBound="repList_ItemDataBound">
                 <ItemTemplate>
 
             <div class="plan col-sm-4 col-lg-4">
@@ -20,9 +20,11 @@
                 </div>
                 <ul>
                     <li class="plan-feature">
-                        <%# (Eval("Body") as string)
-                                .Substring(10)
-                                .Replace(Environment.NewLine , "<br/>") %>
+                        <asp:Image runat="server" ID="img" Width="100" Height="100" Visible="false" />
+                    </li>
+
+                    <li class="plan-feature">
+                        <%# (Eval("Body") as string) %>
                     </li>
                     
                     <li class="plan-feature"><a href="ProductDetail.aspx?ID=<%# Eval("ID") %>" class="btn btn-primary btn-plan-select"><i class="icon-white icon-ok"></i>Select</a></li>

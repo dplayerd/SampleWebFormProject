@@ -10,8 +10,14 @@ using System.Web.UI.WebControls;
 
 namespace Main.SystemAdmin
 {
+
     public partial class ProductDetail : System.Web.UI.Page
     {
+        private string[] _allowExts = { ".jpg", ".png", ".bmp", ".gif" };
+        private string _saveFolder = "~/FileDownload/";
+
+
+
         protected void Page_Init(object sender, EventArgs e)
         {
             if (this.IsUpdateMode())
@@ -60,6 +66,18 @@ namespace Main.SystemAdmin
             this.txtPrice.Text = model.Price.ToString();
             this.txtBody.Text = model.Body;
             this.ckbIsEnabled.Checked = model.IsEnabled;
+
+            if (!string.IsNullOrEmpty(model.Pic1))
+            {
+                this.imgPic1.ImageUrl = _saveFolder + model.Pic1;
+                this.imgPic1.Visible = true;
+            }
+
+            if (!string.IsNullOrEmpty(model.Pic2))
+            {
+                this.imgPic2.ImageUrl = _saveFolder + model.Pic2;
+                this.imgPic2.Visible = true;
+            }
         }
 
 
@@ -89,6 +107,14 @@ namespace Main.SystemAdmin
             model.IsEnabled = this.ckbIsEnabled.Checked;
             model.Price = Convert.ToDecimal(this.txtPrice.Text);
 
+            string pic1 = this.GetNewFileName(this.fuPic1);
+            if (!string.IsNullOrEmpty(pic1))
+                model.Pic1 = pic1;
+
+            string pic2 = this.GetNewFileName(this.fuPic2);
+            if (!string.IsNullOrEmpty(pic2))
+                model.Pic2 = pic2;
+
             try
             {
                 var loginInfo = LoginHelper.GetCurrentUserInfo();
@@ -114,6 +140,29 @@ namespace Main.SystemAdmin
                 this.lblMsg.Text = ex.ToString();
                 return;
             }
+        }
+
+
+        private string GetNewFileName(FileUpload fu)
+        {
+            if (!fu.HasFile)
+                return string.Empty;
+
+
+            var uFile = fu.PostedFile;
+            var fileName = uFile.FileName;
+            string fileExt = System.IO.Path.GetExtension(fileName);
+
+            if (!_allowExts.Contains(fileExt.ToLower()))
+                return string.Empty;
+
+
+            string path = Server.MapPath(_saveFolder);
+            string newFileName = Guid.NewGuid().ToString() + fileExt;
+            string fullPath = System.IO.Path.Combine(path, newFileName);
+
+            uFile.SaveAs(fullPath);
+            return newFileName;
         }
     }
 }

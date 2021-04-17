@@ -65,7 +65,9 @@ namespace CoreProject.Managers
                         CreateDate = @CreateDate, 
                         Creator =  @Creator,
                         ModifyDate = @ModifyDate,	
-                        Modifier   = @Modifier	
+                        Modifier   = @Modifier,
+                        Pic1 = @Pic1,
+                        Pic2 = @Pic2
                     WHERE
                         ID = @ID
                 ";
@@ -81,8 +83,18 @@ namespace CoreProject.Managers
                 new SqlParameter("@CreateDate", model.CreateDate),
                 new SqlParameter("@Creator", model.Creator),
                 new SqlParameter("@ModifyDate", model.ModifyDate),
-                new SqlParameter("@Modifier", model.Modifier)
+                new SqlParameter("@Modifier", model.Modifier),
             };
+
+            if (string.IsNullOrEmpty(model.Pic1))
+                parameters.Add(new SqlParameter("@Pic1", DBNull.Value));
+            else
+                parameters.Add(new SqlParameter("@Pic1", model.Pic1));
+
+            if (string.IsNullOrEmpty(model.Pic2))
+                parameters.Add(new SqlParameter("@Pic2", DBNull.Value));
+            else
+                parameters.Add(new SqlParameter("@Pic2", model.Pic2));
 
             this.ExecuteNonQuery(dbCommandText, parameters);
         }
@@ -295,6 +307,9 @@ namespace CoreProject.Managers
                 model.ModifyDate = dr["ModifyDate"] as DateTime?;
                 model.Modifier = dr["Modifier"] as Guid?;
 
+                model.Pic1 = dr["Pic1"] as string;
+                model.Pic2 = dr["Pic2"] as string;
+
                 list.Add(model);
             }
 
@@ -340,6 +355,8 @@ namespace CoreProject.Managers
             model.Creator = (Guid)dr["Creator"];
             model.ModifyDate = dr["ModifyDate"] as DateTime?;
             model.Modifier = dr["Modifier"] as Guid?;
+            model.Pic1 = dr["Pic1"] as string;
+            model.Pic2 = dr["Pic2"] as string;
 
             return model;
         }

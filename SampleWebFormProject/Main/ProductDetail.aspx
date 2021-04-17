@@ -8,6 +8,21 @@
         <tr><td>Type</td><td><asp:Literal runat="server" ID="ltType"></asp:Literal></td></tr>
         <tr><td>Price</td><td><asp:Literal runat="server" ID="ltPrice"></asp:Literal></td></tr>
         <tr><td>Body</td><td><asp:Literal runat="server" ID="ltBody"></asp:Literal></td></tr>
+
+        <tr>
+            <td>Pic1</td>
+            <td>
+                <asp:Image runat="server" ID="img1" Width="150" Height="150" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>Pic2</td>
+            <td>
+                <asp:Image runat="server" ID="img2" Width="150" Height="150" />
+            </td>
+        </tr>
+
     </table>
 
 </asp:Content>

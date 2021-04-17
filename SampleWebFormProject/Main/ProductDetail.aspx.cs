@@ -11,6 +11,8 @@ namespace Main
 {
     public partial class ProductDetail : System.Web.UI.Page
     {
+        private string _saveFolder = "~/FileDownload/";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             string idText = Request.QueryString["ID"];
@@ -40,6 +42,20 @@ namespace Main
             this.ltBody.Text = model.Body.Replace(Environment.NewLine, "<br/>");
             this.ltType.Text = manager.GetProductName(model.ProductType);
             this.ltPrice.Text = model.Price.ToString("0");
+
+
+
+            if (!string.IsNullOrEmpty(model.Pic1))
+            {
+                this.img1.ImageUrl = _saveFolder + model.Pic1;
+                this.img1.Visible = true;
+            }
+
+            if (!string.IsNullOrEmpty(model.Pic2))
+            {
+                this.img2.ImageUrl = _saveFolder + model.Pic2;
+                this.img2.Visible = true;
+            }
         }
     }
 }
