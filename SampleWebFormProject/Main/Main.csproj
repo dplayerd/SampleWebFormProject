@@ -84,6 +84,7 @@
     <Content Include="SystemAdmin\ProductList.aspx" />
     <Content Include="SystemAdmin\SaleNoteDetail.aspx" />
     <Content Include="SystemAdmin\SaleNoteList.aspx" />
+    <Content Include="TestFileUpload.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -209,6 +210,13 @@
     </Compile>
     <Compile Include="SystemAdmin\SaleNoteList.aspx.designer.cs">
       <DependentUpon>SaleNoteList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestFileUpload.aspx.cs">
+      <DependentUpon>TestFileUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestFileUpload.aspx.designer.cs">
+      <DependentUpon>TestFileUpload.aspx</DependentUpon>
     </Compile>
     <Compile Include="Utility\PageHelper.cs" />
   </ItemGroup>
