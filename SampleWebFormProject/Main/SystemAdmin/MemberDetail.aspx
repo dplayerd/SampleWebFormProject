@@ -47,7 +47,7 @@
         <tr>
             <td>Level</td>
             <td>
-                <asp:RadioButtonList ID="rdblUserLevel" runat="server">
+                <asp:RadioButtonList ID="rdblUserLevel" runat="server" Enabled="false">
                     <asp:ListItem Text="Normal" Value="0"></asp:ListItem>
                     <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
                     <asp:ListItem Text="Employee" Value="2"></asp:ListItem>

@@ -25,9 +25,14 @@ namespace Main.SystemAdmin
             }
             else
             {
-
                 this.txtPWD.Enabled = false;
                 this.txtPWD.BackColor = System.Drawing.Color.DarkGray;
+            }
+
+            LoginInfo loginInfo = LoginHelper.GetCurrentUserInfo();
+            if (loginInfo.Level == UserLevel.Admin)
+            {
+                this.rdblUserLevel.Enabled = true; 
             }
         }
 
