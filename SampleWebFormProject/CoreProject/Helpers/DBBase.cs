@@ -12,7 +12,7 @@ namespace CoreProject.Helpers
     {
         public DataTable GetDataTable(string dbCommand, List<SqlParameter> parameters)
         {
-            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+            string connectionString = this.GetConnectionString();
 
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -40,7 +40,7 @@ namespace CoreProject.Helpers
 
         public object GetScale(string dbCommand, List<SqlParameter> parameters)
         {
-            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
+            string connectionString = this.GetConnectionString();
 
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -69,8 +69,7 @@ namespace CoreProject.Helpers
 
         public int ExecuteNonQuery(string dbCommand, List<SqlParameter> parameters)
         {
-            string connectionString = "Data Source=localhost\\SQLExpress;Initial Catalog=SampleProject; Integrated Security=true";
-
+            string connectionString = GetConnectionString();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -95,6 +94,16 @@ namespace CoreProject.Helpers
                     throw;
                 }
             }
+        }
+
+        private string GetConnectionString()
+        {
+            var manage = System.Configuration.ConfigurationManager.ConnectionStrings["systemDataBase"];
+
+            if (manage == null)
+                return string.Empty;
+            else
+                return manage.ConnectionString;
         }
     }
 }
